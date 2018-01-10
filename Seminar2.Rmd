@@ -2,12 +2,9 @@
 title: "Seminar 2 - Creating Rmd file"
 author: "Lisa Leung"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: github_document
 ---
-# Header 1
-## Header 2
-### Header 3
-#### Header 4
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -31,6 +28,11 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Header 1
+## Header 2
+### Header 3
+#### Header 4
 
 * Fruits
     * apples
