@@ -1,0 +1,127 @@
+---
+title: "Seminar2b - GGPlot2"
+author: "Lisa Leung"
+date: '2018-01-10'
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#Loading tidyverse
+```{r library}
+library(tidyverse)
+```
+
+# The mpg data frame
+
+```{r cars}
+mpg
+```
+
+# Creating a ggplot
+
+A typical template (in general):
+
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>(
+     mapping = aes(<MAPPINGS>),
+     stat = <STAT>, 
+     position = <POSITION>
+  ) +
+  <COORDINATE_FUNCTION> +
+  <SCALE_FUNCTION> +
+  <AXIS_FUNCTION> +
+  <FACET_FUNCTION>
+  
+```{r cars}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+Display vs. Hwy:
+
+1. negative relationship, but doesn't seem to be linear relationship
+
+# Add more factors: class type and cylinders
+
+```{r cars}
+mpg$cyl<- factor(mpg$cyl)
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class, shape=cyl))
+```
+
+# Here is a list of geometries functions
+```{r cars}
+apropos("^geom_")
+```
+# Here is a list of statistics functions
+
+```{r cars}
+apropos("^stat_")
+```
+# Here is a list of scale functions
+
+```{r cars}
+apropos("^scale_")
+```
+
+# Adding a smooth line to the plot:
+```{r cars}
+ggplot(data = mpg, 
+       mapping = aes(x = displ, y = hwy)) +
+  geom_point() +
+  geom_smooth()
+```
+
+# Adding colours on a continuous variable:
+```{r cars}
+ggplot(data = mpg, 
+       mapping = aes(x = displ, y = hwy, color = year)) +
+  geom_point() +
+  geom_smooth()
+```
+
+## Making bar charts
+
+# New table for average efficiency based on class
+```{r cars}
+(averageEfficiency <- 
+  mpg %>% group_by(class) %>% summarise(fuel_efficiency = mean(hwy)))
+```
+# Plotting a geom bar graph to look at the efficiency
+
+Note: need to include  'stat = "identity"' because of an error message. Turns out geom_bar() uses "stat = count" by default. In other words, it would count up the number of rows for a given x value and display that. That basically shows the distribution of some discrete x variable. In which case, the supplied y mapping is irrelevant and hence the error.
+
+But we want geom_bar() to plot bars with heights specified by our y mapping. So what do we do? We can use "stat = identity", which asks geom_bar() to take variable values in the supplied y mapping that correspond to the x values.
+
+```{r cars}
+ggplot(averageEfficiency) + 
+  geom_bar(aes(x = class, y = fuel_efficiency),
+           stat = "identity")
+```
+
+# Adding colours and x,y labels to the geom bar graph 
+```{r cars}
+ggplot(averageEfficiency) + 
+  geom_bar(aes(x = class, y = fuel_efficiency, fill = class),
+           stat = "identity") +
+  ylab("Fuel Efficiency (miles per gallon)") +
+  xlab("Vehicle Type")
+```
+# We can also reverse the y values of the geom bar graph
+```{r cars}
+ggplot(averageEfficiency) + 
+  geom_bar(aes(x = class, y = fuel_efficiency, fill = class),
+           stat = "identity") +
+  ylab("Fuel Efficiency (miles per gallon)") +
+  xlab("Vehicle Type") +
+  scale_y_reverse()
+```
+
+### THE DELIVERABLE
+
+```{r cars}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = drv, size=class))
+```
